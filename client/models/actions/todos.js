@@ -36,7 +36,6 @@ export const deleteCategory = (id) => {
 				return item
 			})
 		}
-	//	console.log(items)
 		const newItems = deleteById(items,[id])
 		const selectedCategory = items.filter(item => item.selected === true)[0] || {}
 		if (newItems.filter(item => item.id === selectedCategory.id).length === 0) {

@@ -59,6 +59,11 @@ export const defaultTodos = [
         text: 'Do it ypung fella',
         done: true
       },
+      {
+        title: 'Do hard work',
+        text: 'Make some exscercises',
+        done: true
+      },
     ]
   },
   {

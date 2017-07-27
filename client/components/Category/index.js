@@ -18,7 +18,6 @@ export default class CategoryList extends React.Component{
 
   render(){
     const categories = this.props.todos.todos
-    console.log(categories)
     const mainCategories = categories.filter(item => item.depth === 1)
     return(
       <div style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>

@@ -21,7 +21,9 @@ class ToDoAppView extends React.Component {
     return (
       <div>
         <Header />
-        <ProgressBar />
+        <ProgressBar
+          todos={todos}
+        />
         <div style={{ display: 'flex', flexDirection: 'row' }}>
           <div style={{ display: 'flex', flex: 2 }}>
             <CategoryList
