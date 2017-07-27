@@ -30,7 +30,8 @@ class ToDoAppView extends React.Component {
           </div>
           <div style={{ display: 'flex', flex: 5, marginLeft: '10px' }}>
             <Tasks
-              tasks={todos.currentTodos}/>
+              tasks={todos}
+              actions={actions}/>
           </div>
         </div>
       </div>

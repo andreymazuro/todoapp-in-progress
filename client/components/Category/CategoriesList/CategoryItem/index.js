@@ -13,7 +13,7 @@ export default class CategoryItem extends React.Component{
       openAddModal: false,
       name: '',
       newCategoryName: '',
-      reverseIcon: false,
+      expanded: false,
     }
   }
 
@@ -46,19 +46,19 @@ export default class CategoryItem extends React.Component{
     };
 
     expandCategories = (item,e) => {
-      const { reverseIcon } = this.state
-      if (reverseIcon) {
+      const { expanded } = this.state
+      if (expanded) {
         this.props.expand(item,e,'show')
       } else {
         this.props.expand(item,e,'hide')
       }
-      this.setState({ reverseIcon: !this.state.reverseIcon })
+      this.setState({ expanded: !this.state.expanded })
     }
 
 
   render(){
     const { item, style, selectCategory, editCategoryName, deleteCategory, expand } = this.props
-    const { reverseIcon } = this.state
+    const { expanded } = this.state
     const renameActions = [
       <FlatButton
         label="Cancel"
@@ -121,7 +121,7 @@ export default class CategoryItem extends React.Component{
               <FontIcon
                 className="material-icons"
                 onClick={ (e) => this.expandCategories(item,e) }>
-                  {reverseIcon? 'keyboard_arrow_down' : 'keyboard_arrow_up'}
+                  {expanded? 'keyboard_arrow_down' : 'keyboard_arrow_up'}
               </FontIcon>
             }
             <h4 style={{ color: item.selected? 'red' : 'black' }}>{item.name}</h4>

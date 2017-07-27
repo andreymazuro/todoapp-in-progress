@@ -1,81 +1,10 @@
 import TODOS from '../action_types/todos'
+import { defaultTodos } from '../const'
 
 export const fetchTodos = () => {
 	return (dispatch, store) => {
 		dispatch(fetching())
-
-    const todos = [
-	    {
-	      id: 1,
-				depth: 1,
-				childrenId: [2,4],
-				visible: true,
-				selected: false,
-	     	name: 'Work',
-	      todos: ['Make coffe', 'do hard work', 'be animal'],
-	    },
-	    {
-				id: 2,
-				depth: 2,
-				childrenId: [3],
-				parentId: 1,
-				visible: true,
-				selected: false,
-				name: 'Front-work',
-				todos:['Laugh', 'Loose'],
-			},
-			{
-				id: 3,
-				depth:3,
-				childrenId: [],
-				parentId: 2,
-				visible: true,
-				selected: false,
-				name: 'gulpy',
-				todos: ['Kill', 'Boy'],
-			},
-	    {
-				id: 4,
-				depth: 2,
-				childrenId: [],
-				parentId: 1,
-				visible: true,
-				selected: false,
-				name: 'do shit',
-				todos:['Do money', 'earn respect']
-			},
-	    {
-	      id: 5,
-	      depth: 1,
-				childrenId: [6,7],
-				visible: true,
-				selected: false,
-	      name: 'Rest',
-	      todos: ['Make stuff', 'do bad work', 'be patient']
-			},
-	    {
-				id: 6,
-				depth: 2,
-				childrenId: [],
-				parentId: 5,
-				visible: true,
-				selected: false,
-				name: 'Relax',
-				todos:['Fury', 'Rage']
-			},
-	    {
-				id: 7,
-				depth: 2,
-				childrenId: [],
-				parentId: 5,
-				visible: true,
-				selected: false,
-				name: 'Do stuff',
-				todos:['Like me', 'earn pain'],
-	    },
-	  ]
-
-		dispatch(fetchingSucceed(todos))
+		dispatch(fetchingSucceed(defaultTodos))
 	}
 }
 
@@ -95,7 +24,19 @@ export const selectCategory = (category) =>{
 
 export const deleteCategory = (id) => {
 	return (dispatch, store) => {
-		const items = store().todos.todos
+		var items = store().todos.todos
+		const item = items.filter(item => id === item.id)[0]
+		if (item.depth !== 1) {
+			const parentId = item.parentId
+			items = items.map(item => {
+				if (item.id === parentId) {
+					const newChildren = item.childrenId.filter(item => item !== id)
+					return {...item, childrenId: newChildren}
+				}
+				return item
+			})
+		}
+	//	console.log(items)
 		const newItems = deleteById(items,[id])
 		const selectedCategory = items.filter(item => item.selected === true)[0] || {}
 		if (newItems.filter(item => item.id === selectedCategory.id).length === 0) {
@@ -128,12 +69,17 @@ export const addNestedCategory = (id, name) => {
 			return item
 		})
 		const parent = items.filter(item => id === item.id)
+		const sameLevelId = parent[0].childrenId[0]
+		var sameLevelVisibility = true
+		if (sameLevelId !== undefined) {
+			var sameLevelVisibility = items.filter(item => sameLevelId === item.id)[0].visible
+		}
 		const newCategory = {
 				id: store().todos.currentId + 1,
 				depth: parent[0].depth + 1,
 				childrenId: [],
 				parentId: id,
-				visible: true,
+				visible: sameLevelVisibility,
 				name: name,
 				todos: []
 		}
@@ -188,6 +134,21 @@ const deleteById = (items,ids) => {
 		return deleteById(newS, children)
 	} else {
 		return newS
+	}
+}
+
+export const changeTodoStatus = (id,num) => {
+	return (dispatch, store) => {
+		const items = store().todos.todos
+		const newItems = items.map(item =>{
+			if (item.id === id) {
+				var todos = item.todos
+				todos[num].done = !todos[num].done
+				return {...item, todos}
+			}
+			return item
+		})
+		dispatch(fetchingSucceed(newItems))
 	}
 }
 
