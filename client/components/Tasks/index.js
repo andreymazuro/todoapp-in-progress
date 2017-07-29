@@ -2,11 +2,23 @@ import React from 'react'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Task from './Task'
 
-export default class Tasks extends React.Component{
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+
+import * as actionCreators from '../../models/actions/todos'
+
+class TasksView extends React.Component{
+
+  componentDidMount(){
+    const { todos, actions, match } = this.props
+    const selectedCategory = todos.todos.filter(item => item.id == this.props.match.params.id)[0]
+    actions.selectCategory(selectedCategory)
+  }
+
   render(){
-    const { tasks, actions } = this.props
-    const showInput = tasks.currentTodos.length !== 0
-    const selectedCategory = tasks.todos.filter(item => item.selected === true)[0]
+    const { todos, actions } = this.props
+    const showInput = todos.currentTodos.length !== 0
+    const selectedCategory = todos.todos.filter(item => item.selected === true)[0]
     return(
       <MuiThemeProvider>
         <div style={{ display: 'flex', flex: 1, flexDirection: 'column' }}>
@@ -19,7 +31,7 @@ export default class Tasks extends React.Component{
             null
           }
           <div style={{ marginTop: '20px' }}>
-            {tasks.currentTodos.map((task,index) =>
+            {todos.currentTodos.map((task,index) =>
               <Task
                 task={task}
                 key={index}
@@ -33,3 +45,13 @@ export default class Tasks extends React.Component{
     )
   }
 }
+const Tasks = connect(
+  store => ({
+    todos: store.todos
+  }),
+  dispatch => ({
+    actions: bindActionCreators(actionCreators, dispatch)
+  })
+)(TasksView);
+
+export default Tasks

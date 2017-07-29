@@ -1,5 +1,6 @@
 import TODOS from '../action_types/todos'
 import { defaultTodos } from '../const'
+import { push } from 'react-router-redux'
 
 export const fetchTodos = () => {
 	return (dispatch, store) => {
@@ -17,8 +18,26 @@ export const selectCategory = (category) =>{
 			}
 			return {...item, selected: false}
 		})
+		const filteredTodos = filterTodos(category.todos, store)
 		dispatch(fetchingSucceed(newItems))
-		dispatch(setCurrentTodos(category.todos))
+		dispatch(setCurrentTodos(filteredTodos))
+		dispatch(push(`/category${category.id}`))
+	}
+}
+
+const filterTodos = (todos, store) => {
+	if (!store().todos.showDone) {
+		return todos.filter(item => !item.done)
+	}
+	return todos
+}
+
+export const setTodosFilter = () => {
+	return (dispatch, store) => {
+		dispatch(setFilter())
+		const currentCategory = store().todos.todos.filter(category => category.selected)[0]
+		const currentTodos = filterTodos(currentCategory.todos, store)
+		dispatch(setCurrentTodos(currentTodos))
 	}
 }
 
@@ -148,6 +167,9 @@ export const changeTodoStatus = (id,num) => {
 			return item
 		})
 		dispatch(fetchingSucceed(newItems))
+		const currentCategory = store().todos.todos.filter(category => category.selected)[0]
+		const currentTodos = filterTodos(currentCategory.todos, store)
+		dispatch(setCurrentTodos(currentTodos))
 	}
 }
 
@@ -168,6 +190,10 @@ export const setCurrentTodos = (currentTodos) => ({
 export const addCategory = (categoryInfo) => ({
 	type: TODOS.ADD_CATEGORY,
 	categoryInfo: categoryInfo
+})
+
+export const setFilter = () => ({
+	type: TODOS.SET_FILTER,
 })
 
 export const fetchingFailure = () => ({

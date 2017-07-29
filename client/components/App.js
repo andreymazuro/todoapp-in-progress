@@ -9,10 +9,11 @@ import Header from './Header'
 import ProgressBar from './ProgressBar'
 import CategoryList from './Category'
 import Tasks from './Tasks'
+import { Route } from 'react-router-dom'
 
 class ToDoAppView extends React.Component {
 
-  componentDidMount(){
+  componentWillMount(){
     this.props.actions.fetchTodos()
   }
 
@@ -20,7 +21,9 @@ class ToDoAppView extends React.Component {
     const { todos, actions } = this.props
     return (
       <div>
-        <Header />
+        <Header
+          actions={actions}
+        />
         <ProgressBar
           todos={todos}
         />
@@ -31,9 +34,7 @@ class ToDoAppView extends React.Component {
               actions={actions}/>
           </div>
           <div style={{ display: 'flex', flex: 5, marginLeft: '10px' }}>
-            <Tasks
-              tasks={todos}
-              actions={actions}/>
+            <Route path={`/category:id`} component={Tasks}/>
           </div>
         </div>
       </div>
