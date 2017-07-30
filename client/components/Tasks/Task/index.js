@@ -4,8 +4,13 @@ import FontIcon from 'material-ui/FontIcon';
 export default class Task extends React.Component{
 
   checkboxToggle = () => {
-    const { selectedCategory, task, actions, num } = this.props
+    const { selectedCategory, task, actions } = this.props
     actions.changeTodoStatus(selectedCategory.id, task.todoId)
+  }
+
+  editTodo = () => {
+    const { selectedCategory, task, actions, location } = this.props
+    this.props.actions.selectTask(task, location)
   }
 
   render(){
@@ -19,7 +24,7 @@ export default class Task extends React.Component{
           />
           <p style={{ marginLeft: '20px' }}>{task.title}</p>
         </div>
-        <FontIcon className="material-icons">mode_edit</FontIcon>
+        <FontIcon onClick={this.editTodo} className="material-icons">mode_edit</FontIcon>
       </div>
     )
   }

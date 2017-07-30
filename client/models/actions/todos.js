@@ -1,15 +1,8 @@
 import TODOS from '../action_types/todos'
 import { defaultTodos } from '../const'
-import { push } from 'react-router-redux'
+import { push, goBack } from 'react-router-redux'
 
-export const fetchTodos = () => {
-	return (dispatch, store) => {
-		dispatch(fetching())
-		dispatch(fetchingSucceed(defaultTodos))
-	}
-}
-
-export const selectCategory = (category) =>{
+export const selectCategory = (category) => {
 	return (dispatch, store) => {
 		const items = store().todos.todos
 		const newItems = items.map(item => {
@@ -19,9 +12,11 @@ export const selectCategory = (category) =>{
 			return {...item, selected: false}
 		})
 		const filteredTodos = filterTodos(category.todos, store().todos.showDone, store().todos.filter)
+		const title = store().todos.filter
+		const showDone = store().todos.showDone
 		dispatch(fetchingSucceed(newItems))
 		dispatch(setCurrentTodos(filteredTodos))
-		dispatch(push(`/category${category.id}`))
+		dispatch(push(`/category/${category.id}?title=${title}&showDone=${showDone}`))
 	}
 }
 
@@ -39,6 +34,8 @@ export const setTodosFilter = (showDone, filter) => {
 		const currentCategory = store().todos.todos.filter(category => category.selected)[0]
 		const currentTodos = filterTodos(currentCategory.todos, showDone, filter)
 		dispatch(setCurrentTodos(currentTodos))
+		const title = store().todos.filter
+		dispatch(push(`/category/${currentCategory.id}?title=${title}&showDone=${showDone}`))
 	}
 }
 
@@ -60,6 +57,7 @@ export const deleteCategory = (id) => {
 		const selectedCategory = items.filter(item => item.selected === true)[0] || {}
 		if (newItems.filter(item => item.id === selectedCategory.id).length === 0) {
 			dispatch(setCurrentTodos([]))
+			dispatch(push('/'))
 		}
 		dispatch(fetchingSucceed(newItems))
 	}
@@ -192,13 +190,59 @@ export const addTodo = (newTodo,id) => {
 	}
 }
 
+export const selectTask = (task, location) => {
+	return (dispatch, store) => {
+		dispatch(setCurrentTask(task))
+		dispatch(push(location + '/task/' + task.todoId))
+	}
+}
+
+export const back = () => {
+	return (dispatch, store) => {
+		dispatch(goBack())
+	}
+}
+
+export const editToDo = (info) => {
+	return (dispatch, store) => {
+		const selectedCategoryId = store().todos.todos.filter(item => item.selected === true)[0].id
+		if (selectedCategoryId === info.categoryId) {
+			var newItems = store().todos.todos.map(category => {
+				var newTodos = category.todos.map(todo => {
+					if (category.id === selectedCategoryId && todo.todoId === store().todos.currentTask.todoId) {
+						return {...info}
+					}
+					return todo
+				})
+				return {...category, todos: [...newTodos] }
+			})
+			dispatch(fetchingSucceed(newItems))
+		} else {
+			var newItems = store().todos.todos.map(category => {
+				var newTodos = category.todos.filter(todo => !(category.id === selectedCategoryId && todo.todoId === store().todos.currentTask.todoId))
+				return {...category, todos: [...newTodos] }
+			})
+			var finalItems = newItems.map(category => {
+				if (category.id === info.categoryId) {
+					const newTodo = {
+						title: info.title,
+						text: info.text,
+						done: info.done,
+						todoId: category.todos.length + 1,
+					}
+					return {...category, todos: [newTodo, ...category.todos]}
+				}
+				return category
+			})
+			dispatch(fetchingSucceed(finalItems))
+		}
+		dispatch(goBack())
+	}
+}
+
 export const addingNestedCategory = (todos) => ({
 	type: TODOS.ADDING_NESTED_CATEGORY,
 	todos: todos,
-})
-
-export const fetching = () => ({
-	type: TODOS.FETCHING,
 })
 
 export const setCurrentTodos = (currentTodos) => ({
@@ -224,4 +268,9 @@ export const fetchingFailure = () => ({
 export const fetchingSucceed = (todos) => ({
 	type: TODOS.FETCHING_RESOLVED,
 	todos: todos,
+})
+
+export const setCurrentTask = (task) => ({
+	type: TODOS.SET_CURRENT_TASK,
+	task: task
 })

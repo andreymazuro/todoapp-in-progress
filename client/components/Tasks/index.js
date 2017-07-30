@@ -26,7 +26,7 @@ class TasksView extends React.Component{
   }
 
   render(){
-    const { todos, actions } = this.props
+    const { todos, actions, match } = this.props
     const showInput = todos.todos.filter(category => category.selected === true).length !== 0
     const selectedCategory = todos.todos.filter(item => item.selected === true)[0]
     return(
@@ -46,9 +46,9 @@ class TasksView extends React.Component{
               <Task
                 task={task}
                 key={index}
-                num={index}
                 actions={actions}
-                selectedCategory={selectedCategory}/>
+                selectedCategory={selectedCategory}
+                location={match.url}/>
             )}
           </div>
         </div>

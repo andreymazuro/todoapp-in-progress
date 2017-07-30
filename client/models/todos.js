@@ -1,8 +1,10 @@
 import TODOS from './action_types/todos';
+import { defaultTodos } from './const'
 
 const initialState = {
   currentTodos: [],
-  todos: [],
+  todos: defaultTodos,
+  currentTask: {},
   currentId: 7,
   loading: false,
   showDone: true,
@@ -56,6 +58,12 @@ const todosReducer = (state = initialState, action) => {
         ...state,
         showDone: action.showDone,
         filter: action.filter,
+      }
+
+    case TODOS.SET_CURRENT_TASK:
+      return{
+        ...state,
+        currentTask: action.task
       }
 
     default:

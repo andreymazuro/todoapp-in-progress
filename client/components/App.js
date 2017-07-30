@@ -2,6 +2,7 @@ import React from 'react';
 
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import { Route, Switch } from 'react-router-dom'
 
 import * as actionCreators from '../models/actions/todos'
 
@@ -9,24 +10,18 @@ import Header from './Header'
 import ProgressBar from './ProgressBar'
 import CategoryList from './Category'
 import Tasks from './Tasks'
-import { Route } from 'react-router-dom'
+import TaskEditor from './TaskEditor'
 
 class ToDoAppView extends React.Component {
-
-  componentWillMount(){
-    this.props.actions.fetchTodos()
-  }
 
   render() {
     const { todos, actions } = this.props
     return (
       <div>
         <Header
-          actions={actions}
-        />
+          actions={actions}/>
         <ProgressBar
-          todos={todos}
-        />
+          todos={todos}/>
         <div style={{ display: 'flex', flexDirection: 'row' }}>
           <div style={{ display: 'flex', flex: 2 }}>
             <CategoryList
@@ -34,7 +29,7 @@ class ToDoAppView extends React.Component {
               actions={actions}/>
           </div>
           <div style={{ display: 'flex', flex: 5, marginLeft: '10px' }}>
-            <Route path={`/category:id`} component={Tasks}/>
+            <Route exact path={`/category/:id`} component={Tasks} />
           </div>
         </div>
       </div>

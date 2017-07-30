@@ -44,7 +44,7 @@ export default class CategoriesList extends React.Component{
   }
 
   render(){
-    const { item, index, style, actions, categories } = this.props
+    const { item, style, actions, categories } = this.props
     const modalActions = [
       <FlatButton
         label="Cancel"
