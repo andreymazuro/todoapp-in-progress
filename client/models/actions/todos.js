@@ -18,25 +18,26 @@ export const selectCategory = (category) =>{
 			}
 			return {...item, selected: false}
 		})
-		const filteredTodos = filterTodos(category.todos, store)
+		const filteredTodos = filterTodos(category.todos, store().todos.showDone, store().todos.filter)
 		dispatch(fetchingSucceed(newItems))
 		dispatch(setCurrentTodos(filteredTodos))
 		dispatch(push(`/category${category.id}`))
 	}
 }
 
-const filterTodos = (todos, store) => {
-	if (!store().todos.showDone) {
-		return todos.filter(item => !item.done)
+const filterTodos = (todos, showDone, filter) => {
+	var pattern = new RegExp(`${filter.toLowerCase()}.*`)
+	if (!showDone) {
+		return todos.filter(item => !item.done && item.title.toLowerCase().match(pattern))
 	}
-	return todos
+	return todos.filter(item => item.title.toLowerCase().match(pattern))
 }
 
-export const setTodosFilter = () => {
+export const setTodosFilter = (showDone, filter) => {
 	return (dispatch, store) => {
-		dispatch(setFilter())
+		dispatch(setFilter(showDone, filter))
 		const currentCategory = store().todos.todos.filter(category => category.selected)[0]
-		const currentTodos = filterTodos(currentCategory.todos, store)
+		const currentTodos = filterTodos(currentCategory.todos, showDone, filter)
 		dispatch(setCurrentTodos(currentTodos))
 	}
 }
@@ -155,21 +156,39 @@ const deleteById = (items,ids) => {
 	}
 }
 
-export const changeTodoStatus = (id,num) => {
+export const changeTodoStatus = (categoryId,todoId) => {
 	return (dispatch, store) => {
 		const items = store().todos.todos
 		const newItems = items.map(item =>{
-			if (item.id === id) {
-				var todos = item.todos
-				todos[num].done = !todos[num].done
-				return {...item, todos}
+			if (item.id === categoryId) {
+				var newTodos = item.todos.map(todo => {
+					if (todo.todoId === todoId) {
+						return {...todo, done: !todo.done}
+					}
+					return todo
+				})
+				return {...item, todos: newTodos}
 			}
 			return item
 		})
 		dispatch(fetchingSucceed(newItems))
-		const currentCategory = store().todos.todos.filter(category => category.selected)[0]
-		const currentTodos = filterTodos(currentCategory.todos, store)
+		const currentCategory = newItems.filter(category => category.selected)[0]
+		const currentTodos = filterTodos(currentCategory.todos, store().todos.showDone, store().todos.filter)
 		dispatch(setCurrentTodos(currentTodos))
+	}
+}
+
+export const addTodo = (newTodo,id) => {
+	return (dispatch, store) => {
+		const currentTodos = store().todos.currentTodos
+		dispatch(setCurrentTodos([newTodo, ...currentTodos]))
+		const newItems = store().todos.todos.map(item => {
+			if (item.id === id) {
+				return {...item, todos: [newTodo, ...item.todos]}
+			}
+			return item
+		})
+		dispatch(fetchingSucceed(newItems))
 	}
 }
 
@@ -192,8 +211,10 @@ export const addCategory = (categoryInfo) => ({
 	categoryInfo: categoryInfo
 })
 
-export const setFilter = () => ({
+export const setFilter = (showDone, filter) => ({
 	type: TODOS.SET_FILTER,
+	filter: filter,
+	showDone: showDone
 })
 
 export const fetchingFailure = () => ({

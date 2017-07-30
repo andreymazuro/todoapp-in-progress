@@ -5,7 +5,7 @@ export default class Task extends React.Component{
 
   checkboxToggle = () => {
     const { selectedCategory, task, actions, num } = this.props
-    actions.changeTodoStatus(selectedCategory.id, num)
+    actions.changeTodoStatus(selectedCategory.id, task.todoId)
   }
 
   render(){

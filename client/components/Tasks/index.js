@@ -15,17 +15,28 @@ class TasksView extends React.Component{
     actions.selectCategory(selectedCategory)
   }
 
+  addTodo = (selectedCategory) => {
+    const newTodo = {
+      title: this.todoName.value,
+      text: '',
+      done: false,
+      todoId: selectedCategory.todos.length + 1,
+    }
+    this.props.actions.addTodo(newTodo, selectedCategory.id)
+  }
+
   render(){
     const { todos, actions } = this.props
-    const showInput = todos.currentTodos.length !== 0
+    const showInput = todos.todos.filter(category => category.selected === true).length !== 0
     const selectedCategory = todos.todos.filter(item => item.selected === true)[0]
     return(
       <MuiThemeProvider>
         <div style={{ display: 'flex', flex: 1, flexDirection: 'column' }}>
           {showInput?
             <div style={{ marginTop: '20px', alignSelf: 'flex-end' }}>
-              <input />
-              <button>Add</button>
+              <input
+                ref={(input) => { this.todoName = input }} />
+              <button onClick={ () => this.addTodo(selectedCategory)}>Add</button>
             </div>
               :
             null

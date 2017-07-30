@@ -6,6 +6,7 @@ const initialState = {
   currentId: 7,
   loading: false,
   showDone: true,
+  filter: ''
 }
 
 const todosReducer = (state = initialState, action) => {
@@ -53,7 +54,8 @@ const todosReducer = (state = initialState, action) => {
     case TODOS.SET_FILTER:
       return {
         ...state,
-        showDone: !state.showDone
+        showDone: action.showDone,
+        filter: action.filter,
       }
 
     default:

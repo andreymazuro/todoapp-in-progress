@@ -10,12 +10,14 @@ export const defaultTodos = [
       {
         title: 'Make coffe',
         text: 'Do it man',
-        done: true
+        done: true,
+        todoId: 1,
       },
       {
         title: 'Do hard work',
         text: 'Make some exscercises',
-        done: true
+        done: true,
+        todoId: 2,
       },
     ]
   },
@@ -31,12 +33,14 @@ export const defaultTodos = [
       {
         title: 'Univer',
         text: 'Go to the university',
-        done: false
+        done: false,
+        todoId: 1,
       },
       {
         title: 'Shkola',
         text: 'Go to school',
-        done: true
+        done: true,
+        todoId: 2,
       },
     ]
   },
@@ -52,17 +56,20 @@ export const defaultTodos = [
       {
         title: 'Be cool',
         text: 'Do it man',
-        done: true
+        done: true,
+        todoId: 1,
       },
       {
         title: 'Create space',
         text: 'Do it ypung fella',
-        done: true
+        done: true,
+        todoId: 2,
       },
       {
         title: 'Do hard work',
         text: 'Make some exscercises',
-        done: true
+        done: true,
+        todoId: 3,
       },
     ]
   },
@@ -78,12 +85,14 @@ export const defaultTodos = [
       {
         title: 'Clean',
         text: 'Clean floor nad kitchen',
-        done: false
+        done: false,
+        todoId: 1,
       },
       {
         title: 'Make better',
         text: 'Make more comfortable',
-        done: true
+        done: true,
+        todoId: 2,
       },
     ]
   },
@@ -98,12 +107,14 @@ export const defaultTodos = [
       {
         title: 'Make value',
         text: 'Do your best',
-        done: true
+        done: true,
+        todoId: 1,
       },
       {
         title: 'Be crazy',
         text: 'Like your dog',
-        done: true
+        done: true,
+        todoId: 2,
       },
     ]
   },
@@ -119,12 +130,14 @@ export const defaultTodos = [
       {
         title: 'Feed dog',
         text: `don't forget to buy food`,
-        done: true
+        done: true,
+        todoId: 1,
       },
       {
         title: 'Feed cat',
         text: 'He is so fat',
-        done: true
+        done: true,
+        todoId: 2,
       },
     ]
   },
@@ -140,12 +153,14 @@ export const defaultTodos = [
       {
         title: 'Make coffe',
         text: 'Do it man',
-        done: false
+        done: false,
+        todoId: 1,
       },
       {
         title: 'Do hard work',
         text: 'Make some exscercises',
-        done: true
+        done: true,
+        todoId: 2
       },
     ]
   },
