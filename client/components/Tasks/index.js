@@ -33,17 +33,11 @@ class TasksView extends React.Component{
     return(
       <MuiThemeProvider>
         <div style={{ display: 'flex', flex: 1, flexDirection: 'column' }}>
-          <FlatButton
-            primary={true}
-            onClick={() => actions.undoAction()}
-            label="Undo"/>
-          <FlatButton
-            primary={true}
-            onClick={() => actions.redoAction()}
-            label="Redo"/>
           {showInput?
             <div style={{ marginTop: '20px', alignSelf: 'flex-end' }}>
               <input
+                placeholder="Enter todo title"
+                style={{ width: '200px', height: '20px', marginRight: '20px' }}
                 ref={(input) => { this.todoName = input }} />
               <button onClick={ () => this.addTodo(selectedCategory)}>Add</button>
             </div>

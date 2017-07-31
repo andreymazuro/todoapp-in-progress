@@ -243,7 +243,7 @@ export const undoAction = () => {
 	return (dispatch, store) => {
 		var past = store().todos.past
 		if (past.length === 0) {
-			alert('Cannot undo')
+			alert('No actions to undo')
 		} else {
 			var future = [store().todos.present, ...store().todos.future]
 			var present = store().todos.past.slice(-1)[0]
@@ -257,7 +257,7 @@ export const redoAction = () => {
 	return (dispatch, store) => {
 		var future = store().todos.future
 		if (future.length === 0) {
-			alert('Cannot redo')
+			alert('No actions to redo')
 		} else {
 			var present = future[0]
 			future.shift();

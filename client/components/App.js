@@ -15,11 +15,11 @@ import TaskEditor from './TaskEditor'
 class ToDoAppView extends React.Component {
 
   render() {
-    const { todos, actions } = this.props
-    console.log(this.props.shit)
+    const { todos, actions, state } = this.props
     return (
       <div>
         <Header
+          state={state}
           actions={actions}/>
         <ProgressBar
           todos={todos}/>
@@ -41,7 +41,7 @@ class ToDoAppView extends React.Component {
 const ToDoApp = connect(
   store => ({
     todos: store.todos.present,
-    shit: store.todos
+    state: store.todos
   }),
   dispatch => ({
     actions: bindActionCreators(actionCreators, dispatch)
