@@ -1,6 +1,7 @@
 import React from 'react'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Task from './Task'
+import FlatButton from 'material-ui/FlatButton';
 
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
@@ -32,6 +33,14 @@ class TasksView extends React.Component{
     return(
       <MuiThemeProvider>
         <div style={{ display: 'flex', flex: 1, flexDirection: 'column' }}>
+          <FlatButton
+            primary={true}
+            onClick={() => actions.undoAction()}
+            label="Undo"/>
+          <FlatButton
+            primary={true}
+            onClick={() => actions.redoAction()}
+            label="Redo"/>
           {showInput?
             <div style={{ marginTop: '20px', alignSelf: 'flex-end' }}>
               <input
@@ -58,7 +67,7 @@ class TasksView extends React.Component{
 }
 const Tasks = connect(
   store => ({
-    todos: store.todos
+    todos: store.todos.present
   }),
   dispatch => ({
     actions: bindActionCreators(actionCreators, dispatch)

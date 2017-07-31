@@ -2,7 +2,7 @@ import React from 'react';
 
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { Route, Switch } from 'react-router-dom'
+import { Route } from 'react-router-dom'
 
 import * as actionCreators from '../models/actions/todos'
 
@@ -16,6 +16,7 @@ class ToDoAppView extends React.Component {
 
   render() {
     const { todos, actions } = this.props
+    console.log(this.props.shit)
     return (
       <div>
         <Header
@@ -39,7 +40,8 @@ class ToDoAppView extends React.Component {
 
 const ToDoApp = connect(
   store => ({
-    todos: store.todos
+    todos: store.todos.present,
+    shit: store.todos
   }),
   dispatch => ({
     actions: bindActionCreators(actionCreators, dispatch)

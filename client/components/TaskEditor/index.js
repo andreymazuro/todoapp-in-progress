@@ -15,7 +15,7 @@ class TaskEditorView extends React.Component{
   constructor(props){
     super(props);
     this.state={
-      categoryId: props.todos.todos.filter(category => category.selected)[0].id,
+      todoId: props.todos.todos.filter(category => category.selected)[0].id,
       title: props.todos.currentTask.title,
       text: props.todos.currentTask.text,
       done: props.todos.currentTask.done
@@ -23,7 +23,7 @@ class TaskEditorView extends React.Component{
   }
 
   moveToCategory = (id) => {
-    this.setState({ categoryId: id })
+    this.setState({ todoId: id })
   }
 
   saveChanges = () => {
@@ -59,7 +59,7 @@ class TaskEditorView extends React.Component{
                   actions={actions}
                   categories={todos.todos}
                   moveToCategory={this.moveToCategory}
-                  currentId={this.state.categoryId}/>
+                  currentId={this.state.todoId}/>
               )}
             </div>
             <div style={{ flex: 5, flexDirection: 'column', marginLeft: 20, marginRight: 20 }}>
@@ -86,7 +86,7 @@ class TaskEditorView extends React.Component{
 
 const TaskEditor = connect(
   store => ({
-    todos: store.todos
+    todos: store.todos.present
   }),
   dispatch => ({
     actions: bindActionCreators(actionCreators, dispatch)

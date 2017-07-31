@@ -2,69 +2,95 @@ import TODOS from './action_types/todos';
 import { defaultTodos } from './const'
 
 const initialState = {
-  currentTodos: [],
-  todos: defaultTodos,
-  currentTask: {},
-  currentId: 7,
-  loading: false,
-  showDone: true,
-  filter: ''
+  past: [],
+  present: {
+    currentTodos: [],
+    todos: defaultTodos,
+    currentTask: {},
+    currentId: 7,
+    showDone: true,
+    filter: ''
+  },
+  future: []
 }
 
 const todosReducer = (state = initialState, action) => {
   switch (action.type) {
-    case TODOS.FETCHING:
-      return {
-        ...state,
-        loading: true,
-      }
 
     case TODOS.FETCHING_RESOLVED:
       return {
         ...state,
-        todos: action.todos,
-        loading: false,
-      }
-
-    case TODOS.FETCHING_REJECTED:
-      return {
-        ...state,
-        todos: [],
-        loading: false,
+        past: [...state.past, state.present],
+        present: {
+          ...state.present,
+          todos: action.todos,
+        }
       }
 
     case TODOS.SET_CURRENT_TODOS:
       return {
         ...state,
-        currentTodos: action.currentTodos,
+        present: {
+          ...state.present,
+          currentTodos: action.currentTodos,
+        }
       }
 
     case TODOS.ADD_CATEGORY:
       return {
         ...state,
-        todos: [action.categoryInfo, ...state.todos ],
-        currentId: state.currentId + 1,
+        past: [...state.past, state.present],
+        present: {
+          ...state.present,
+          todos: [action.categoryInfo, ...state.present.todos ],
+          currentId: state.present.currentId + 1,
+        }
       }
 
     case TODOS.ADDING_NESTED_CATEGORY:
       return {
         ...state,
-        todos: action.todos,
-        currentId: state.currentId + 1,
+        past: [...state.past, state.present],
+        present: {
+          ...state.present,
+          todos: action.todos,
+          currentId: state.present.currentId + 1,
+        }
       }
 
     case TODOS.SET_FILTER:
       return {
         ...state,
-        showDone: action.showDone,
-        filter: action.filter,
+        present: {
+          ...state.present,
+          showDone: action.showDone,
+          filter: action.filter,
+        }
       }
 
     case TODOS.SET_CURRENT_TASK:
-      return{
+      return {
         ...state,
-        currentTask: action.task
+        present: {
+          ...state.present,
+          currentTask: action.task,
+        }
       }
+
+    case TODOS.PICKED_CATEGORY:
+      return {
+        ...state,
+        present: {
+          ...state.present,
+          todos: action.todos,
+        }
+      }
+
+    case TODOS.UNDO:
+      return {
+        ...action.info,
+      }
+
 
     default:
       return state;
